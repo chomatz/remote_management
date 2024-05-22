@@ -1,0 +1,38 @@
+---
+
+- name: ensure tasks run only on selected os releases
+  block:
+
+    - name: install cockpit
+      ansible.builtin.package:
+        name: "{{ cockpit_packages }}"
+        state: present
+
+    - name: disable system user access
+      community.general.pamd:
+        name: cockpit
+        type: auth
+        control: required
+        module_path: pam_listfile.so
+        new_type: auth
+        new_control: requisite
+        new_module_path: pam_succeed_if.so
+        module_arguments: 'uid >= 1000'
+        state: before
+
+    - name: expose cockpit ports
+      ansible.posix.firewalld:
+        service: cockpit
+        immediate: true
+        permanent: true
+        state: enabled
+
+    - name: start and enable cockpit
+      ansible.builtin.service:
+        name: cockpit.socket
+        state: started
+        enabled: true
+
+  when: ansible_distribution == "Fedora"
+
+...

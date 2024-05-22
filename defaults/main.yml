@@ -1,0 +1,6 @@
+---
+
+cockpit_packages:
+  - cockpit
+
+...
