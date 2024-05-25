@@ -9,12 +9,8 @@ ansible role for cockpit deployment
 
 ## examples
 ```
----
-
 - name: deploy cockpit
   ansible.builtin.include_role:
     name: remote_management
     tasks_from: cockpit_deploy.yml
-
-...
 ```
